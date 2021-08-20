@@ -10,9 +10,12 @@ from PIL import Image
 from pandas_datareader import data 
 import pandas as pd 
 import altair as alt 
-import time 
+import time
+from streamlit.elements.legacy_altair import generate_chart 
 from streamlit.proto.Button_pb2 import Button
 import yfinance as yf 
+from streamlit_folium import folium_static
+import folium
 
 st.sidebar.write("""
 ### IT企業データ可視化アプリ
@@ -33,13 +36,30 @@ if genre == 'Apple':
     img=Image.open('Apple.png')
     st.image(img,use_column_width=True)
     st.write('### 企業情報')
-    st.write('(公式youtube)https://www.youtube.com/channel/UCE_M8A5yxnLfW0KghEeajjw')
-    img=Image.open('aap.jpeg')
+    button34=st.button('CEO Tim cook')
+    if button34:
+        st.write("""
+        ティム・クックはアップルのCEOであり、取締役会のメンバーです。
+2011年8月にCEOに任命される前は、ティムはAppleの最高執行責任者であり、Appleのサプライチェーンのエンドツーエンド管理、営業活動、すべての市場でのサービスとサポートを含む、同社の世界的な販売と運営のすべてを担当していました。
+ティムはまた、IBMに12年間勤務し、最近では北米フルフィルメントのディレクターとして、北米およびラテンアメリカにあるIBMのパーソナルコンピューターカンパニーの製造および流通部門を率いていました。
+ティムはデューク大学でMBAを取得し、そこではFuqua Scholarであり、オーバーン大学で工業工学の理学士号を取得しています。""")
+    button33=st.button('Apple park map')
+    if button33:
+        m = folium.Map(location=[37.33271, -122.00865], zoom_start=16)
+        tooltip = "Apple park"
+        folium.Marker(
+            [37.33271, -122.00865], popup="Apple park", tooltip=tooltip
+        ).add_to(m)
+        folium_static(m)
+    img=Image.open('applepark.jpeg')
     st.image(img,use_column_width=True)
     st.write('(公式サイト)https://investor.apple.com/investor-relations/default.aspx')
     img=Image.open('aap2.jpeg')
     st.image(img,use_column_width=True)
-    st.write('### CEO Tim cook')
+    st.write('(公式youtube)https://www.youtube.com/channel/UCE_M8A5yxnLfW0KghEeajjw')
+    img=Image.open('aap.jpeg')
+    st.image(img,use_column_width=True)
+    st.write('詳細')
     st.write('アップル（Apple Inc）は、スマートフォン、パソコン、タブレット、ウェアラブル、アクセサリーの設計・製造・販売及び関連する多様なサービスの販売を行う。【事業内容】製品には、「アイフォーン」、「マック」、「アイパッド」、「ウェアラブル」、「ホーム」、「アクセサリー」が含まれる。「アイフォーン」は、アイフォーンオーエス（iOS）オペレーティングシステムをベースにしたスマートフォンラインである。「マック」は、マックオーエス（macOS）オペレーティングシステムをベースにしたパーソナルコンピュータである。「アイパッド」は、アイパッドオーエス（iPadOS）オペレーティングシステムをベースにした多目的タブレットである。「ウェアラブル」、「ホーム」、「アクセサリー」には、「エアーポッズ」、「アップルテレビ」、「アップルウォッチ」、ビーツ製品、「ホームポッド」、「アイポッドタッチ」、その他の「アップル」ブランドおよびサードパーティのアクセサリーが含まれる。「エアーポッズ」は、シリと相互作用するワイヤレスヘッドフォンである。「アイポッドウォッチ」は、スマートウォッチの製品ラインである。サービスには、広告、アップルケア、クラウドサービス、デジタルコンテンツ、支払いサービスが含まれる。顧客は、主に消費者、中小企業、教育、企業、政府の市場にいる。')
     st.write('引用先：(https://www.rakuten-sec.co.jp/ITS/rakuten_g/creditcard/?sclid=a_GO_brand_rakuten&gclid=EAIaIQobChMIlZKppMa88gIVDrqWCh2Pngz7EAAYASAAEgKlV_D_BwE)')
     aapl=yf.Ticker('AAPL')
@@ -74,6 +94,9 @@ if genre == 'Apple':
         st.area_chart(bps)
     if button22:
         st.area_chart(per)
+    st.write('商品別売上推移')
+    ip=pd.DataFrame([[136000,20628,22831,24348,11132],[141319,19222,25850,29980,12863],[166699,18805,25484,37190,17417],[142381,21280,25740,46291,24482],[137781,23724,28622,53768,30620]],index=['2016','2017','2018','2019','2020'],columns=['iPhone','iPad','Mac','サービス','その他商品'])
+    st.bar_chart(ip)
     st.write("""
     ### こちらは株価可視化ツールです。以下のオプションから日数を選択できます
     """)
@@ -136,7 +159,6 @@ if genre == 'Apple':
             )
         )   
         st.altair_chart(chart,use_container_width=True)
-
         st.write('### 財務分析')
         page = st.selectbox("財務諸表を選択してください", ["損益計算書", "貸借対照表", "キャッシュフロー計算書"]) 
     if page == "損益計算書":
@@ -161,6 +183,44 @@ if genre == 'Apple':
         a=pd.DataFrame([[39.07,27.83,21.18,6.58,14.20,35.62],[38.46,26.76,21.09,6.65,12.88,36.07],[38.34,26.69,22.41,6.28,16.27,55.56],[37.81,24.57,21.23,7.01,16.32,55.56],[38.23,24.14,20.91,7.25,17.72,87.86]],index=['2016','2017','2018','2019','2020'],columns=['売上総利益率','営業利益率','当期純利益率','SGA比率','ROA(総資産回転率)','ROE(自己資本利益率)'])
         st.table(a.T)
         st.line_chart(a)
+        st.write('四半期決算(最終四半期を除く)')
+        pl1=pd.DataFrame([[75872,30423,2404,3848,24171,6212,18361,3.30],[50557,19921,2511,3423,13987,3626,10516,1.91],[42358,16106,2560,3441,10105,2573,7796,1.43],[78351,30176,2871,3946,23359,6289,17891,3.38],[52896,20591,2776,3718,14097,3655,11029,2.11],[45408,17488,2937,3783,10768,2691,8717,1.68],[88293,33912,3407,4231,26274,6965,20065,3.92],[61137,23422,3378,4150,15894,2346,13822,2.75],[53265,20421,3701,4108,12612,1765,11519,2.36],[84310,32031,3902,4783,23346,3941,19965,4.22],[58015,21821,3948,4458,13415,2232,11561,2.47],[53809,20227,4257,4426,11544,1867,10044,2.20],[91819,35217,4451,5197,25569,3682,22236,5.04],[58313,22370,4565,4952,12853,1866,11249,2.58],[59685,22680,4758,4831,13091,1884,11253,2.61]],index=['2016(Q1)','2016(Q2)','2016(Q3)','2017(Q1)','2017(Q2)','2017(Q3)','2018(Q1)','2018(Q2)','2018(Q3)','2019(Q1)','2019(Q2)','2019(Q3)','2020(Q1)','2020(Q2)','2020(Q3)'],columns=['純売上高','売上総利益','研究開発費','販管費','営業利益','法人税等引等金','当期純利益','一株あたりの利益'])
+        left_colum,right_column=st.columns(2)
+        img=Image.open('ap1.jpeg')
+        genre2=left_colum.radio('決算項目を選択してください',('純売上高','売上総利益','研究開発費','販管費','営業利益','法人税等引等金','当期純利益','一株あたりの利益'))
+        right_column.image(img,use_column_width=True)
+        if genre2 == '純売上高':
+            left_colum,right_column=st.columns(2)
+            left_colum.write(pl1['純売上高'])
+            right_column.bar_chart(pl1['純売上高'])
+        elif genre2 == '売上総利益':
+            left_colum,right_column=st.columns(2)
+            left_colum.write(pl1['売上総利益'])
+            right_column.bar_chart(pl1['売上総利益'])
+        elif genre2=='研究開発費':
+            left_colum,right_column=st.columns(2)
+            left_colum.write(pl1['研究開発費'])
+            right_column.bar_chart(pl1['研究開発費'])
+        elif genre2=='販管費':
+            left_colum,right_column=st.columns(2)
+            left_colum.write(pl1['販管費'])
+            right_column.bar_chart(pl1['販管費'])
+        elif genre2=='営業利益':
+            left_colum,right_column=st.columns(2)
+            left_colum.write(pl1['営業利益'])
+            right_column.bar_chart(pl1['営業利益'])
+        elif genre2 == '法人税等引等金':
+            left_colum,right_column=st.columns(2)
+            left_colum.write(pl1['法人税等引等金'])
+            right_column.bar_chart(pl1['法人税等引等金'])
+        elif genre2=='当期純利益':
+            left_colum,right_column=st.columns(2)
+            left_colum.write(pl1['当期純利益'])
+            right_column.bar_chart(pl1['当期純利益'])
+        elif genre2=='一株あたりの利益':
+            left_colum,right_column=st.columns(2)
+            left_colum.write(pl1['一株あたりの利益'])
+            right_column.bar_chart(pl1['一株あたりの利益'])
     elif page == "貸借対照表":
         BS=pd.DataFrame([[20484,15754,2132,8283,106869,214817,321686,75427,36074,78927,193437,31251,96364,634,128249,321686],[20289,17874,4855,13936,128645,246674,375319,100814,40415,103703,241272,35867,98330,-150,134047,375319],[25913,23186,3956,12087,131339,234366,365725,116866,45180,102519,258578,40241,70400,-3454,107147,365725],[48844,22926,4106,12352,162819,175697,338516,105718,50503,102067,248028,45174,45898,-584,90488,338516],[38016,16120,4061,11264,143713,180175,323888,105392,54490,107440,258549,50779,14966,-406,65339,323888]],index=['2016','2017','2018','2019','2020'],columns=['現金同等物','売掛金','在庫','その他流動資産','流動資産合計','固定資産','総資産','流動負債','その他固定負債','有利子負債','負債合計','株主資本','利益剰余金','その他包括利益累計額','総株主資本','負債と株主資本の合計'])
         PL=pd.DataFrame([[215639,131376,84263,10045,14194,24239,60024,61372,15685,45687,8.35],[229234,141048,88186,11581,15261,26842,61344,64089,15738,48351,9.27],[265595,163756,101839,14236,16705,30941,70898,72903,13372,59531,12.01],[260174,161782,98392,16217,18245,34462,63930,65737,10481,55256,2.99],[274515,169559,104956,18752,19916,38668,66288,67091,9680,57411,3.31]],index=['2016','2017','2018','2019','2020'],columns=['純売上高','売上原価','売上総利益','研究開発費','販管費','総営業費用','営業利益','税引前当期純利益','法人税引等金','当期純利益','一株あたり利益'])
@@ -204,6 +264,72 @@ if genre == 'Apple':
         g=pd.DataFrame([[67.03,150.82,39.86,141.68,9.71,61.54,167.49],[61.07,179.99,35.71,127.60,9.55,77.36,184.02],[72.62,241.33,29.29,112.38,11.00,95.68,218.73],[76.85,274.10,26.73,154.01,13.34,112.79,194.16],[84.75,395.70,20.17,136.36,15.67,164.43,275.75]],index=['2016','2017','2018','2019','2020'],columns=['総資産回転率','負債比率','自己資本比率','流動比率','株主資本比率','ネットD/Eレシオ','固定比率'])
         st.table(g.T)
         st.line_chart(g)
+        st.write('四半期決算(最終四半期を除く)')
+        bs1=pd.DataFrame([[16689,12953,2451,76219,217065,293284,33312,76092,88925,165017,28253,101494,-1480,128267,293384],[21514,12229,2281,87592,217685,305277,25098,68265,106555,174820,29484,102021,-1048,130457,305277],[18237,11714,1831,93761,211841,305602,26318,71486,107575,179061,30106,96542,-107,126541,305602],[16371,14057,2712,103332,227809,331141,38510,84130,114621,198751,32144,100001,245,132390,331141],[15157,11579,2910,101990,232542,334532,28573,73342,127108,200450,33579,100925,-422,134082,334532],[18571,12399,3146,112875,232298,345173,31915,81302,131446,212748,34445,98525,-545,132425,345173],[27491,23440,4421,143810,262984,406794,62985,115788,150807,266595,36447,104593,-841,140199,406794],[45059,14324,7662,130053,237449,367502,34311,89230,151304,240624,38044,91898,-3064,126878,367502],[31971,14104,5936,115761,233436,349197,38489,88548,145700,234248,38624,79436,-311,114949,349197],[44771,18077,4988,140828,232891,373719,44293,108283,147544,255827,40970,80510,-3588,117892,373719],[37988,150851,4884,123346,218652,341998,30443,93772,142366,236138,42801,64558,-1499,105860,341998],[50530,14148,3355,134973,187266,322239,29115,89704,136079,225783,43371,53724,-639,96456,322239],[39771,20970,4097,163231,177387,340618,45111,102161,148926,251087,45972,43997,-418,89531,340618],[40174,15722,3334,143753,176647,320400,32421,96094,145881,241975,48032,33182,-2789,78425,320400],[33383,17882,3978,140065,177279,317344,35325,95318,149744,245062,48696,24136,-550,72282,317344]],index=['2016(Q1)','2016(Q2)','2016(Q3)','2017(Q1)','2017(Q2)','2017(Q3)','2018(Q1)','2018(Q2)','2018(Q3)','2019(Q1)','2019(Q2)','2019(Q3)','2020(Q1)','2020(Q2)','2020(Q3)'],columns=['現金同等物','売掛金','在庫','流動資産','固定資産','総資産','買掛金','流動負債','固定負債','負債','株主資本','利益上余剰金','その他包括利益累計額','総株主資本','負債と株主資本の合計'])
+        left_colum,right_column=st.columns(2)
+        img=Image.open('ap4.jpeg')
+        genre3=left_colum.radio('決算項目を選択してください',('現金同等物','売掛金','在庫','流動資産','固定資産','総資産','買掛金','流動負債','固定負債','負債','株主資本','利益上余剰金','その他包括利益累計額','総株主資本','負債と株主資本の合計'))
+        right_column.image(img,use_column_width=True)
+        if genre3 == '現金同等物':
+            left_colum,right_column=st.columns(2)
+            left_colum.write(bs1['現金同等物'])
+            right_column.bar_chart(bs1['現金同等物'])
+        elif genre3 == '売掛金':
+            left_colum,right_column=st.columns(2)
+            left_colum.write(bs1['売掛金'])
+            right_column.bar_chart(bs1['売掛金'])
+        elif genre3=='在庫':
+            left_colum,right_column=st.columns(2)
+            left_colum.write(bs1['在庫'])
+            right_column.bar_chart(bs1['在庫'])
+        elif genre3=='流動資産':
+            left_colum,right_column=st.columns(2)
+            left_colum.write(bs1['流動資産'])
+            right_column.bar_chart(bs1['流動資産'])
+        elif genre3=='固定資産':
+            left_colum,right_column=st.columns(2)
+            left_colum.write(bs1['固定資産'])
+            right_column.bar_chart(bs1['固定資産'])
+        elif genre3 == '総資産':
+            left_colum,right_column=st.columns(2)
+            left_colum.write(bs1['総資産'])
+            right_column.bar_chart(bs1['総資産'])
+        elif genre3=='買掛金':
+            left_colum,right_column=st.columns(2)
+            left_colum.write(bs1['買掛金'])
+            right_column.bar_chart(bs1['買掛金'])
+        elif genre3=='流動負債':
+            left_colum,right_column=st.columns(2)
+            left_colum.write(bs1['流動負債'])
+            right_column.bar_chart(bs1['流動負債'])
+        elif genre3=='固定負債':
+            left_colum,right_column=st.columns(2)
+            left_colum.write(bs1['固定負債'])
+            right_column.bar_chart(bs1['固定負債'])
+        elif genre3=='負債':
+            left_colum,right_column=st.columns(2)
+            left_colum.write(bs1['負債'])
+            right_column.bar_chart(bs1['負債'])
+        elif genre3 == '株主資本':
+            left_colum,right_column=st.columns(2)
+            left_colum.write(bs1['株主資本'])
+            right_column.bar_chart(bs1['株主資本'])
+        elif genre3=='利益上余剰金':
+            left_colum,right_column=st.columns(2)
+            left_colum.write(bs1['利益上余剰金'])
+            right_column.bar_chart(bs1['利益上余剰金'])
+        elif genre3=='その他包括利益累計額':
+            left_colum,right_column=st.columns(2)
+            left_colum.write(bs1['その他包括利益累計額'])
+            right_column.bar_chart(bs1['その他包括利益累計額'])
+        elif genre3=='総株主資本':
+            left_colum,right_column=st.columns(2)
+            left_colum.write(bs1['総株主資本'])
+            right_column.bar_chart(bs1['総株主資本'])
+        elif genre3=='負債と株主資本の合計':
+            left_colum,right_column=st.columns(2)
+            left_colum.write(bs1['負債と株主資本の合計'])
+            right_column.bar_chart(bs1['負債と株主資本の合計'])
     elif page == "キャッシュフロー計算書":
         CF=pd.DataFrame([[65824,-45977,20484],[64225,-46446,20289],[77434,16066,87876],[69391,45896,90976],[80674,-4289,-86820]],index=['2016','2017','2018','2019','2020'],columns=['営業活動によるキャッシュフロー','投資活動によるキャッシュフロー','財務活動によるキャッシュフロー'])
         st.write(CF.T)
@@ -226,9 +352,25 @@ if genre == 'Apple':
         st.write('判断基準')
         CF1=pd.DataFrame([['+','-','-'],['+','-','+'],['+','+','-'],['+','+','+'],['-','-','-'],['-','-','+'],['-','+','-'],['-','+','+']],index=['優良','積極投資','財務改善','転換','再検討','大勝負','融資途絶','要注意'],columns=['営業キャッシュフロー','投資キャッシュフロー','財務キャッシュフロー'])
         st.table(CF1)
+        st.write('四半期決算(最終四半期を除く)')
+        cf1=pd.DataFrame([[27463,-20450,-11444],[39064,-34110,-4560],[49698,-38580,-14001],[27056,-19122,-12047],[36579,-33324,-11582],[47942,-36504,-13351],[28293,-13590,-7501],[43423,15120,-33773],[57911,19067,-65296],[26690,5844,-13676],[37845,19192,-43133],[49481,46694,-69937],[30516,-13668,-25407],[43827,-4655,-46347],[60098,-9820,-65463]],index=['2016(Q1)','2016(Q2)','2016(Q3)','2017(Q1)','2017(Q2)','2017(Q3)','2018(Q1)','2018(Q2)','2018(Q3)','2019(Q1)','2019(Q2)','2019(Q3)','2020(Q1)','2020(Q2)','2020(Q3)'],columns=['営業活動によるCF','投資活動によるCF','財務活動によるCF'])
+        left_colum,right_column=st.columns(2)
+        img=Image.open('ap2.jpeg')
+        genre4=left_colum.radio('決算項目を選択してください',('営業活動によるキャッシュフロー','投資活動によるキャッシュフロー','財務活動によるキャッシュフロー'))
+        right_column.image(img,use_column_width=True)
+        if genre4 == '営業活動によるキャッシュフロー':
+            left_colum,right_column=st.columns(2)
+            left_colum.write(cf1['営業活動によるCF'])
+            right_column.bar_chart(cf1['営業活動によるCF'])
+        elif genre4 == '投資活動によるキャッシュフロー':
+            left_colum,right_column=st.columns(2)
+            left_colum.write(cf1['投資活動によるCF'])
+            right_column.bar_chart(cf1['投資活動によるCF'])
+        elif genre4=='財務活動によるキャッシュフロー':
+            left_colum,right_column=st.columns(2)
+            left_colum.write(cf1['財務活動によるCF'])
+            right_column.bar_chart(cf1['財務活動によるCF'])
+
 
     
-        
-
-
-        
+    
